@@ -1,7 +1,5 @@
 package top.zhao.rpc.api;
 
-import top.zhao.rpc.entity.HelloEntity;
-
 /**
  * 测试接口
  *@author xiaozhao

@@ -1,9 +1,8 @@
 package top.zhao.rpc.test;
 
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.api.HelloService;
-import top.zhao.rpc.entity.HelloEntity;
+import top.zhao.rpc.api.HelloEntity;
 
 /**
  * 测试服务接口实现类
