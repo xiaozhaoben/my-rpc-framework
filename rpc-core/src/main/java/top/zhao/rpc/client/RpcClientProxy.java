@@ -1,4 +1,4 @@
-package top.zhao.client;
+package top.zhao.rpc.client;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
