@@ -1,4 +1,4 @@
-package top.zhao.server;
+package top.zhao.rpc.server;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,12 +13,12 @@ import java.util.concurrent.*;
  *@author xiaozhao
  */
 @Slf4j
-class RpcServer {
+public class RpcServer {
 
     private final ExecutorService threadPool;
 
 
-    RpcServer() {
+    public RpcServer() {
         int corePoolSize = 5;
         int maximumPoolSize = 50;
         long keepAliveTime = 60;
@@ -28,7 +28,7 @@ class RpcServer {
     }
 
     public void register(Object service, int port){
-        try(ServerSocket serverSocket = new ServerSocket();) {
+        try(ServerSocket serverSocket = new ServerSocket(port)) {
             log.info("服务器启动中");
             Socket socket;
             while ((socket = serverSocket.accept()) != null){

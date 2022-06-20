@@ -1,13 +1,11 @@
-package top.zhao.server;
+package top.zhao.rpc.server;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.entity.RpcRequest;
 import top.zhao.rpc.entity.RpcResponse;
 
-import javax.annotation.Resource;
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -33,7 +31,7 @@ public class WorkThread implements Runnable{
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
             RpcRequest request = (RpcRequest) objectInputStream.readObject();
             Method method = service.getClass().getMethod(request.getMethodName(), request.getParamTypes());
-            log.info("调用" + service.getClass().getName(), "的" + request.getMethodName(), "方法");
+            log.info("调用" + service.getClass().getName() + "的" + request.getMethodName() + "方法");
             Object res = method.invoke(service, request.getParameters());
             objectOutputStream.writeObject(RpcResponse.success(res));
             objectOutputStream.flush();
