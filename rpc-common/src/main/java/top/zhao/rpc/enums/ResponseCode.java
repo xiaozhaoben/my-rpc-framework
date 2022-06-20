@@ -5,7 +5,11 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * 返回状态码
+ *
+ *@author xiaozhao
+ */
 @AllArgsConstructor
 @Getter
 public enum ResponseCode {

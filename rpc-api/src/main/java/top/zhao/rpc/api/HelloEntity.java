@@ -1,4 +1,4 @@
-package top.zhao.rpc.entity;
+package top.zhao.rpc.api;
 
 
 import lombok.AllArgsConstructor;
