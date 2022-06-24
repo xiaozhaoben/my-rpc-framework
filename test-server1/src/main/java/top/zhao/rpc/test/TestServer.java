@@ -2,6 +2,8 @@ package top.zhao.rpc.test;
 
 
 import top.zhao.rpc.api.HelloService;
+import top.zhao.rpc.registry.DefaultServiceRegistry;
+import top.zhao.rpc.registry.ServiceRegistry;
 import top.zhao.rpc.server.RpcServer;
 
 /**
@@ -11,9 +13,11 @@ import top.zhao.rpc.server.RpcServer;
 public class TestServer {
 
     public static void main(String[] args) {
-        RpcServer rpcServer = new RpcServer();
         HelloService helloService = new HelloServiceImpl();
-        rpcServer.register(helloService, 9000);
+        ServiceRegistry serviceRegistry = new DefaultServiceRegistry();
+        serviceRegistry.registry(helloService);
+        RpcServer rpcServer = new RpcServer(serviceRegistry);
+        rpcServer.start(9000);
     }
 
 }
