@@ -1,10 +1,9 @@
-package top.zhao.rpc.server;
+package top.zhao.rpc.transport.socket.server;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.entity.RpcRequest;
 import top.zhao.rpc.entity.RpcResponse;
-import top.zhao.rpc.registry.ServiceRegistry;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,31 +13,30 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 
 /**
- * 处理request的工作线程
+ * 实际进行过程调用线程
  *
  *@author xiaozhao
  */
 @Slf4j
 @AllArgsConstructor
-public class RequestHandlerThread implements Runnable{
+public class WorkThread implements Runnable{
 
 
+    private Object service;
     private Socket socket;
-    private RequestHandler requestHandler;
-    private ServiceRegistry serviceRegistry;
 
     @Override
     public void run() {
         try(ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
             RpcRequest request = (RpcRequest) objectInputStream.readObject();
-            String interfaceName = request.getInterfaceName();
-            Object service = serviceRegistry.getRegistry(interfaceName);
-            Object res = requestHandler.handle(request, service);
+            Method method = service.getClass().getMethod(request.getMethodName(), request.getParamTypes());
+            log.info("调用" + service.getClass().getName() + "的" + request.getMethodName() + "方法");
+            Object res = method.invoke(service, request.getParameters());
             objectOutputStream.writeObject(RpcResponse.success(res));
             objectOutputStream.flush();
-        } catch (IOException | ClassNotFoundException e) {
-            log.error("调用时发生错误", e);
+        } catch (IOException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 }

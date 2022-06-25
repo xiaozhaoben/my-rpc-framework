@@ -1,7 +1,8 @@
-package top.zhao.rpc.server;
+package top.zhao.rpc.transport.socket.server;
 
 import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.registry.ServiceRegistry;
+import top.zhao.rpc.transport.RpcServer;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -14,7 +15,7 @@ import java.util.concurrent.*;
  *@author xiaozhao
  */
 @Slf4j
-public class RpcServer {
+public class SocketRpcServer implements RpcServer {
 
     private static final int CORE_POOL_SIZE = 5;
     private static final int MAXIMUM_POOL_SIZE = 50;
@@ -24,7 +25,7 @@ public class RpcServer {
     private RequestHandler requestHandler = new RequestHandler();
     private final ServiceRegistry serviceRegistry;
 
-    public RpcServer(ServiceRegistry serviceRegistry) {
+    public SocketRpcServer(ServiceRegistry serviceRegistry) {
         this.serviceRegistry = serviceRegistry;
         BlockingQueue<Runnable> workingQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
         ThreadFactory threadFactory = Executors.defaultThreadFactory();

@@ -1,4 +1,4 @@
-package top.zhao.rpc.client;
+package top.zhao.rpc.transport.socket.client;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class RpcClientProxy implements InvocationHandler {
                 .setParameters(args)
                 .setParamTypes(method.getParameterTypes());
         log.info("调用方法：{}", request.getMethodName());
-        RpcClient rpcClient = new RpcClient();
+        SocketRpcClient rpcClient = new SocketRpcClient();
         return ((RpcResponse) rpcClient.sendRequest(request, host, port)).getData();
     }
 }

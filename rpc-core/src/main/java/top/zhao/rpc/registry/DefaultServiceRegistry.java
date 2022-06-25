@@ -17,9 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultServiceRegistry implements ServiceRegistry{
 
     //服务表
-    private final Map<String, Object> serviceMap = new ConcurrentHashMap<>();
+    private final static Map<String, Object> serviceMap = new ConcurrentHashMap<>();
     //已注册的服务名
-    private final Set<String> registerService = ConcurrentHashMap.newKeySet();
+    private final static Set<String> registerService = ConcurrentHashMap.newKeySet();
 
     @Override
     public synchronized  <T> void registry(T service) {

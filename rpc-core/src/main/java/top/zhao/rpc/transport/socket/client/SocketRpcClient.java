@@ -1,4 +1,4 @@
-package top.zhao.rpc.client;
+package top.zhao.rpc.transport.socket.client;
 
 import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.entity.RpcRequest;
@@ -14,7 +14,7 @@ import java.net.Socket;
  * @author :xiaozhao
  */
 @Slf4j
-public class RpcClient {
+public class SocketRpcClient {
 
     public Object sendRequest(RpcRequest request, String host, Integer port){
         try(Socket socket = new Socket(host, port)) {
