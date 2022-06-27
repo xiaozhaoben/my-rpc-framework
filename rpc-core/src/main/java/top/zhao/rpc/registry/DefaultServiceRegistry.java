@@ -22,7 +22,7 @@ public class DefaultServiceRegistry implements ServiceRegistry{
     private final static Set<String> registerService = ConcurrentHashMap.newKeySet();
 
     @Override
-    public synchronized  <T> void registry(T service) {
+    public synchronized  <T> void register(T service) {
         String serviceName = service.getClass().getCanonicalName();
         if (registerService.contains(serviceName)){
             throw new RpcException(RpcError.SERVICE_IS_ALREADY_REGISTERED);

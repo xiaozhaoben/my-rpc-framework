@@ -15,6 +15,6 @@ public class HelloServiceImpl implements HelloService {
     @Override
     public String hello(HelloEntity helloEntity) {
         log.info("接受消息为: {}", helloEntity.getMsg());
-        return helloEntity.getMsg();
+        return helloEntity.getMsg() + "真不错";
     }
 }

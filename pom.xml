@@ -15,7 +15,6 @@
         <module>rpc-api</module>
         <module>test-server1</module>
         <module>test-client</module>
-        <module>test-server1</module>
     </modules>
 
     <properties>

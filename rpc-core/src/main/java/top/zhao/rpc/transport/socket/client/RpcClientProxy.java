@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.entity.RpcRequest;
 import top.zhao.rpc.entity.RpcResponse;
+import top.zhao.rpc.transport.RpcClient;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -18,8 +19,7 @@ import java.lang.reflect.Proxy;
 @AllArgsConstructor
 public class RpcClientProxy implements InvocationHandler {
 
-    private String host;
-    private int port;
+    private final RpcClient client;
 
     @SuppressWarnings("unchecked")
     public <T> T getProxy(Class<T> clazz){
@@ -28,13 +28,8 @@ public class RpcClientProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        RpcRequest request = new RpcRequest()
-                .setInterfaceName(method.getDeclaringClass().getName())
-                .setMethodName(method.getName())
-                .setParameters(args)
-                .setParamTypes(method.getParameterTypes());
-        log.info("调用方法：{}", request.getMethodName());
-        SocketRpcClient rpcClient = new SocketRpcClient();
-        return ((RpcResponse) rpcClient.sendRequest(request, host, port)).getData();
+        RpcRequest rpcRequest = new RpcRequest(method.getDeclaringClass().getName(),
+                method.getName(), args, method.getParameterTypes());
+        return client.sendRequest(rpcRequest);
     }
 }
