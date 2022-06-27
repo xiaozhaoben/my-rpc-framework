@@ -12,6 +12,7 @@ import top.zhao.rpc.codec.CommonEncoder;
 import top.zhao.rpc.entity.RpcRequest;
 import top.zhao.rpc.entity.RpcResponse;
 import top.zhao.rpc.serializer.JsonSerializer;
+import top.zhao.rpc.serializer.KryoSerializer;
 import top.zhao.rpc.transport.RpcClient;
 
 /**
@@ -42,7 +43,7 @@ public class NettyClient implements RpcClient {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline pipeline = ch.pipeline();
                         pipeline.addLast(new CommonDecoder())
-                                .addLast(new CommonEncoder(new JsonSerializer()))
+                                .addLast(new CommonEncoder(new KryoSerializer()))
                                 .addLast(new NettyClientHandler());
                     }
                 });

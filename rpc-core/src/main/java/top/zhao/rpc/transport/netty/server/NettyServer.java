@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.codec.CommonDecoder;
 import top.zhao.rpc.codec.CommonEncoder;
 import top.zhao.rpc.serializer.JsonSerializer;
+import top.zhao.rpc.serializer.KryoSerializer;
 import top.zhao.rpc.transport.RpcServer;
 
 /**
@@ -40,7 +41,7 @@ public class NettyServer implements RpcServer {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             ChannelPipeline pipeline = socketChannel.pipeline();
                             pipeline.addLast(new CommonDecoder());
-                            pipeline.addLast(new CommonEncoder(new JsonSerializer()));
+                            pipeline.addLast(new CommonEncoder(new KryoSerializer()));
                             pipeline.addLast(new NettyServerHandler());
                         }
                     });
