@@ -2,8 +2,8 @@ package top.zhao.rpc.test;
 
 
 import top.zhao.rpc.api.HelloService;
-import top.zhao.rpc.registry.DefaultServiceRegistry;
-import top.zhao.rpc.registry.ServiceRegistry;
+import top.zhao.rpc.provider.ServiceProvider;
+import top.zhao.rpc.provider.ServiceProviderImpl;
 import top.zhao.rpc.transport.RpcServer;
 import top.zhao.rpc.transport.socket.server.SocketRpcServer;
 
@@ -15,8 +15,8 @@ public class SocketTestServer {
 
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
-        ServiceRegistry serviceRegistry = new DefaultServiceRegistry();
-        serviceRegistry.register(helloService);
+        ServiceProvider serviceRegistry = new ServiceProviderImpl();
+        serviceRegistry.addServiceProvider(helloService);
         RpcServer rpcServer = new SocketRpcServer(serviceRegistry);
         rpcServer.start(9000);
     }

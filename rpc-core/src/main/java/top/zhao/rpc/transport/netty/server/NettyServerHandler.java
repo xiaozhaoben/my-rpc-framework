@@ -8,8 +8,8 @@ import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.entity.RpcRequest;
 import top.zhao.rpc.entity.RpcResponse;
-import top.zhao.rpc.registry.DefaultServiceRegistry;
-import top.zhao.rpc.registry.ServiceRegistry;
+import top.zhao.rpc.provider.ServiceProvider;
+import top.zhao.rpc.provider.ServiceProviderImpl;
 import top.zhao.rpc.transport.socket.server.RequestHandler;
 
 /**
@@ -21,11 +21,11 @@ import top.zhao.rpc.transport.socket.server.RequestHandler;
 public class NettyServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
 
     private static RequestHandler requestHandler;
-    private static ServiceRegistry serviceRegistry;
+    private static ServiceProvider serviceProvider;
 
     static {
         requestHandler = new RequestHandler();
-        serviceRegistry = new DefaultServiceRegistry();
+        serviceProvider = new ServiceProviderImpl();
     }
 
 
@@ -34,7 +34,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcRequest> 
         try {
             log.info("服务器接收请求:{}", request);
             String interfaceName = request.getInterfaceName();
-            Object service = serviceRegistry.getRegistry(interfaceName);
+            Object service = serviceProvider.getServiceProvider(interfaceName);
             Object res = requestHandler.handle(request, service);
             ChannelFuture future = ctx.writeAndFlush(RpcResponse.success(res, request.getRequestId()));
             future.addListener(ChannelFutureListener.CLOSE);

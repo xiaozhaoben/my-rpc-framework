@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.entity.RpcRequest;
 import top.zhao.rpc.entity.RpcResponse;
+import top.zhao.rpc.provider.ServiceProvider;
 import top.zhao.rpc.registry.ServiceRegistry;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class RequestHandlerThread implements Runnable{
 
     private Socket socket;
     private RequestHandler requestHandler;
-    private ServiceRegistry serviceRegistry;
+    private ServiceProvider serviceProvider;
 
     @Override
     public void run() {
@@ -31,7 +32,7 @@ public class RequestHandlerThread implements Runnable{
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
             RpcRequest request = (RpcRequest) objectInputStream.readObject();
             String interfaceName = request.getInterfaceName();
-            Object service = serviceRegistry.getRegistry(interfaceName);
+            Object service = serviceProvider.getServiceProvider(interfaceName);
             Object res = requestHandler.handle(request, service);
             objectOutputStream.writeObject(RpcResponse.success(res, request.getRequestId()));
             objectOutputStream.flush();
