@@ -1,5 +1,7 @@
 package top.zhao.rpc.transport;
 
+import top.zhao.rpc.serializer.CommonSerializer;
+
 /**
  * 服务端通用接口
  *
@@ -8,5 +10,7 @@ package top.zhao.rpc.transport;
 public interface RpcServer {
 
     void start(int port);
+
+    void setSerializer(CommonSerializer serializer);
 
 }

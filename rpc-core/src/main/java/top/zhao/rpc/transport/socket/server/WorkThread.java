@@ -33,7 +33,7 @@ public class WorkThread implements Runnable{
             Method method = service.getClass().getMethod(request.getMethodName(), request.getParamTypes());
             log.info("调用" + service.getClass().getName() + "的" + request.getMethodName() + "方法");
             Object res = method.invoke(service, request.getParameters());
-            objectOutputStream.writeObject(RpcResponse.success(res));
+            objectOutputStream.writeObject(RpcResponse.success(res, request.getRequestId()));
             objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();

@@ -1,13 +1,16 @@
 package top.zhao.rpc.transport.socket.client;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.entity.RpcRequest;
 import top.zhao.rpc.entity.RpcResponse;
 import top.zhao.rpc.enums.ResponseCode;
 import top.zhao.rpc.enums.RpcError;
 import top.zhao.rpc.exception.RpcException;
+import top.zhao.rpc.serializer.CommonSerializer;
 import top.zhao.rpc.transport.RpcClient;
+import top.zhao.rpc.util.RpcMessageChecker;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,8 +23,10 @@ import java.net.Socket;
  * @author :xiaozhao
  */
 @Slf4j
-@AllArgsConstructor
+@Data
 public class SocketRpcClient implements RpcClient {
+
+    private CommonSerializer serializer;
 
     private final String host;
     private final int port;
@@ -42,6 +47,7 @@ public class SocketRpcClient implements RpcClient {
                 log.error("调用服务失败, service: {}, response:{}", request.getInterfaceName(), rpcResponse);
                 throw new RpcException(RpcError.SERVICE_INVOCATION_FAILURE, " service:" + request.getInterfaceName());
             }
+            RpcMessageChecker.check(request, rpcResponse);
             return rpcResponse.getData();
         } catch (IOException | ClassNotFoundException e) {
             log.error("rpc客户端调用发生错误:", e);

@@ -1,7 +1,9 @@
 package top.zhao.rpc.transport.socket.server;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.registry.ServiceRegistry;
+import top.zhao.rpc.serializer.CommonSerializer;
 import top.zhao.rpc.transport.RpcServer;
 
 import java.io.IOException;
@@ -15,7 +17,10 @@ import java.util.concurrent.*;
  *@author xiaozhao
  */
 @Slf4j
+@Data
 public class SocketRpcServer implements RpcServer {
+
+    private CommonSerializer serializer;
 
     private static final int CORE_POOL_SIZE = 5;
     private static final int MAXIMUM_POOL_SIZE = 50;

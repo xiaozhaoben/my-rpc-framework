@@ -33,7 +33,7 @@ public class RequestHandler {
             method = service.getClass().getMethod(request.getMethodName(), request.getParamTypes());
         } catch (NoSuchMethodException e) {
             log.error("方法未找到", e);
-            return RpcResponse.fail(ResponseCode.METHOD_NOT_FOUND);
+            return RpcResponse.fail(ResponseCode.METHOD_NOT_FOUND, request.getRequestId());
         }
         return method.invoke(service, request.getParameters());
     }
