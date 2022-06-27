@@ -27,6 +27,7 @@ public class NettyServer implements RpcServer {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
+
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
@@ -38,13 +39,14 @@ public class NettyServer implements RpcServer {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             ChannelPipeline pipeline = socketChannel.pipeline();
-                            pipeline.addLast(new NettyServerHandler());
                             pipeline.addLast(new CommonDecoder());
                             pipeline.addLast(new CommonEncoder(new JsonSerializer()));
+                            pipeline.addLast(new NettyServerHandler());
                         }
                     });
             ChannelFuture future = serverBootstrap.bind(port).sync();
             future.channel().closeFuture().sync();
+
         } catch (InterruptedException e) {
             log.error("启动服务器时有错误发生: ", e);
         } finally {
