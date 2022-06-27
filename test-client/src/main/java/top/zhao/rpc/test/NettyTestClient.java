@@ -16,7 +16,7 @@ import top.zhao.rpc.transport.socket.client.SocketRpcClient;
 public class NettyTestClient {
 
     public static void main(String[] args) {
-        RpcClient client = new NettyClient("127.0.0.1", 9999);
+        RpcClient client = new NettyClient();
         client.setSerializer(new KryoSerializer());
         RpcClientProxy proxy = new RpcClientProxy(client);
         HelloService helloService = proxy.getProxy(HelloService.class);

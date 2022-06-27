@@ -13,10 +13,16 @@ import top.zhao.rpc.codec.CommonDecoder;
 import top.zhao.rpc.codec.CommonEncoder;
 import top.zhao.rpc.enums.RpcError;
 import top.zhao.rpc.exception.RpcException;
+import top.zhao.rpc.provider.ServiceProvider;
+import top.zhao.rpc.provider.ServiceProviderImpl;
+import top.zhao.rpc.registry.NacosServiceRegistry;
+import top.zhao.rpc.registry.ServiceRegistry;
 import top.zhao.rpc.serializer.CommonSerializer;
 import top.zhao.rpc.serializer.JsonSerializer;
 import top.zhao.rpc.serializer.KryoSerializer;
 import top.zhao.rpc.transport.RpcServer;
+
+import java.net.InetSocketAddress;
 
 /**
  * netty服务端
@@ -27,10 +33,23 @@ import top.zhao.rpc.transport.RpcServer;
 @Data
 public class NettyServer implements RpcServer {
 
+    private final String host;
+    private final int port;
+
+    private final ServiceRegistry serviceRegistry;
+    private final ServiceProvider serviceProvider;
+
     private CommonSerializer serializer;
 
+    public NettyServer(String host, int port) {
+        this.host = host;
+        this.port = port;
+        serviceRegistry = new NacosServiceRegistry();
+        serviceProvider = new ServiceProviderImpl();
+    }
+
     @Override
-    public void start(int port) {
+    public void start() {
         if(serializer == null) {
             log.error("未设置序列化器");
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
@@ -55,7 +74,7 @@ public class NettyServer implements RpcServer {
                             pipeline.addLast(new NettyServerHandler());
                         }
                     });
-            ChannelFuture future = serverBootstrap.bind(port).sync();
+            ChannelFuture future = serverBootstrap.bind(host, port).sync();
             future.channel().closeFuture().sync();
 
         } catch (InterruptedException e) {
@@ -64,5 +83,15 @@ public class NettyServer implements RpcServer {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
+
+    @Override
+    public <T> void publishService(Object service, Class<T> serviceClass) {
+        if(serializer == null) {
+            log.error("未设置序列化器");
+            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
+        }
+        serviceProvider.addServiceProvider(service);
+        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
     }
 }
