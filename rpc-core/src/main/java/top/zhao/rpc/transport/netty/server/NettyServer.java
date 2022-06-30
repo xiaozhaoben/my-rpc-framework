@@ -13,6 +13,7 @@ import top.zhao.rpc.codec.CommonDecoder;
 import top.zhao.rpc.codec.CommonEncoder;
 import top.zhao.rpc.enums.RpcError;
 import top.zhao.rpc.exception.RpcException;
+import top.zhao.rpc.hook.ShutdownHook;
 import top.zhao.rpc.provider.ServiceProvider;
 import top.zhao.rpc.provider.ServiceProviderImpl;
 import top.zhao.rpc.registry.NacosServiceRegistry;
@@ -75,6 +76,7 @@ public class NettyServer implements RpcServer {
                         }
                     });
             ChannelFuture future = serverBootstrap.bind(host, port).sync();
+            ShutdownHook.getShutdownHook().addClearAllHook();
             future.channel().closeFuture().sync();
 
         } catch (InterruptedException e) {
