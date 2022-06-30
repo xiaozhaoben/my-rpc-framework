@@ -36,7 +36,6 @@ public class NettyClient implements RpcClient {
     private static final Bootstrap bootstrap;
 
     private CommonSerializer serializer;
-    private final ServiceRegistry serviceRegistry;
     private final ServiceDiscovery serviceDiscovery;
 
     static {
@@ -49,7 +48,6 @@ public class NettyClient implements RpcClient {
 
 
     public NettyClient() {
-        serviceRegistry = new NacosServiceRegistry();
         serviceDiscovery = new NacosServiceDiscovery();
     }
 
