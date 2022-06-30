@@ -1,4 +1,4 @@
-package top.zhao.rpc.registry;
+package top.zhao.rpc.provider;
 
 import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.enums.RpcError;
@@ -9,21 +9,21 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 默认服务注册表
+ * 默认服务注册表，保存服务端本地服务
  *
  *@author xiaozhao
  */
 @Slf4j
-public class DefaultServiceRegistry implements ServiceRegistry{
+public class ServiceProviderImpl implements ServiceProvider {
 
     //服务表
-    private final Map<String, Object> serviceMap = new ConcurrentHashMap<>();
+    private final static Map<String, Object> serviceMap = new ConcurrentHashMap<>();
     //已注册的服务名
-    private final Set<String> registerService = ConcurrentHashMap.newKeySet();
+    private final static Set<String> registerService = ConcurrentHashMap.newKeySet();
 
     @Override
-    public synchronized  <T> void registry(T service) {
-        String serviceName = service.getClass().getCanonicalName();
+    public <T> void addServiceProvider(T service, Class<T> serviceClass) {
+        String serviceName = serviceClass.getCanonicalName();
         if (registerService.contains(serviceName)){
             throw new RpcException(RpcError.SERVICE_IS_ALREADY_REGISTERED);
         }
@@ -39,9 +39,9 @@ public class DefaultServiceRegistry implements ServiceRegistry{
     }
 
     @Override
-    public synchronized Object getRegistry(String ServiceName) {
-        if (serviceMap.containsKey(ServiceName)){
-            return serviceMap.get(ServiceName);
+    public Object getServiceProvider(String serviceName) {
+        if (serviceMap.containsKey(serviceName)){
+            return serviceMap.get(serviceName);
         }else {
             throw new RpcException(RpcError.SERVICE_NOT_FOUND);
         }

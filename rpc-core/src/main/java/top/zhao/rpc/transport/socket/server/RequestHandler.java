@@ -1,4 +1,4 @@
-package top.zhao.rpc.server;
+package top.zhao.rpc.transport.socket.server;
 
 import lombok.extern.slf4j.Slf4j;
 import top.zhao.rpc.entity.RpcRequest;
@@ -33,7 +33,7 @@ public class RequestHandler {
             method = service.getClass().getMethod(request.getMethodName(), request.getParamTypes());
         } catch (NoSuchMethodException e) {
             log.error("方法未找到", e);
-            return RpcResponse.fail(ResponseCode.METHOD_NOT_FOUND);
+            return RpcResponse.fail(ResponseCode.METHOD_NOT_FOUND, request.getRequestId());
         }
         return method.invoke(service, request.getParameters());
     }
