@@ -22,8 +22,8 @@ public class ServiceProviderImpl implements ServiceProvider {
     private final static Set<String> registerService = ConcurrentHashMap.newKeySet();
 
     @Override
-    public <T> void addServiceProvider(T service) {
-        String serviceName = service.getClass().getCanonicalName();
+    public <T> void addServiceProvider(T service, Class<T> serviceClass) {
+        String serviceName = serviceClass.getCanonicalName();
         if (registerService.contains(serviceName)){
             throw new RpcException(RpcError.SERVICE_IS_ALREADY_REGISTERED);
         }

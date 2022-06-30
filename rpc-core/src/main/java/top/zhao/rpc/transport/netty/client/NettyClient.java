@@ -13,7 +13,9 @@ import top.zhao.rpc.entity.RpcRequest;
 import top.zhao.rpc.entity.RpcResponse;
 import top.zhao.rpc.enums.RpcError;
 import top.zhao.rpc.exception.RpcException;
+import top.zhao.rpc.registry.NacosServiceDiscovery;
 import top.zhao.rpc.registry.NacosServiceRegistry;
+import top.zhao.rpc.registry.ServiceDiscovery;
 import top.zhao.rpc.registry.ServiceRegistry;
 import top.zhao.rpc.serializer.CommonSerializer;
 import top.zhao.rpc.transport.RpcClient;
@@ -35,6 +37,7 @@ public class NettyClient implements RpcClient {
 
     private CommonSerializer serializer;
     private final ServiceRegistry serviceRegistry;
+    private final ServiceDiscovery serviceDiscovery;
 
     static {
         EventLoopGroup group = new NioEventLoopGroup();
@@ -47,6 +50,7 @@ public class NettyClient implements RpcClient {
 
     public NettyClient() {
         serviceRegistry = new NacosServiceRegistry();
+        serviceDiscovery = new NacosServiceDiscovery();
     }
 
     @Override
@@ -57,7 +61,7 @@ public class NettyClient implements RpcClient {
         }
         AtomicReference<Object> result = new AtomicReference<>(null);
         try {
-            Channel channel = ChannelProvider.get(serviceRegistry.lookupService(request.getInterfaceName()), serializer);
+            Channel channel = ChannelProvider.get(serviceDiscovery.lookupService(request.getInterfaceName()), serializer);
             if(channel.isActive()) {
                 channel.writeAndFlush(request).addListener(future1 -> {
                     if (future1.isSuccess()) {
