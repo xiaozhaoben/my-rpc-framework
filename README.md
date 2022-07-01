@@ -5,7 +5,7 @@ RPC框架
 
 my-rpc-framework是一款基于nacos实现的rpc框架
 
-####特点
+#### 特点
 * 实现了基于 Java 原生 Socket 传输与 Netty 传输两种网络传输方式
 * 实现了两种序列化算法，Json 方式、Kryo 算法
 * 实现了两种负载均衡算法：随机算法与轮转算法
