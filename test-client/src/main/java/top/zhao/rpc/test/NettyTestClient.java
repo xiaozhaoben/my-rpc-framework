@@ -28,6 +28,8 @@ public class NettyTestClient {
 
         for(int i = 0; i < 10; i ++) {
             String res = service.say("rpc");
+            String bye = service.bye();
+            System.out.println(bye);
             System.out.println(res);
         }
     }

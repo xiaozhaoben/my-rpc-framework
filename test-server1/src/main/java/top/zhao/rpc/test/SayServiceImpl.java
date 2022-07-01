@@ -21,4 +21,9 @@ public class SayServiceImpl implements SayService {
         log.info("接受信息为{}", msg);
         return "say bye" + msg;
     }
+
+    @Override
+    public String bye() {
+        return "bye";
+    }
 }
