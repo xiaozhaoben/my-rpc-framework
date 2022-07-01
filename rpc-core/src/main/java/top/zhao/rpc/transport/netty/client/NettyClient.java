@@ -13,6 +13,7 @@ import top.zhao.rpc.entity.RpcRequest;
 import top.zhao.rpc.entity.RpcResponse;
 import top.zhao.rpc.enums.RpcError;
 import top.zhao.rpc.exception.RpcException;
+import top.zhao.rpc.loadbalancer.LoadBalancer;
 import top.zhao.rpc.registry.NacosServiceDiscovery;
 import top.zhao.rpc.registry.NacosServiceRegistry;
 import top.zhao.rpc.registry.ServiceDiscovery;
@@ -37,6 +38,7 @@ public class NettyClient implements RpcClient {
 
     private CommonSerializer serializer;
     private final ServiceDiscovery serviceDiscovery;
+    private LoadBalancer loadBalancer;
 
     static {
         EventLoopGroup group = new NioEventLoopGroup();
@@ -50,6 +52,12 @@ public class NettyClient implements RpcClient {
     public NettyClient() {
         serviceDiscovery = new NacosServiceDiscovery();
     }
+
+    public NettyClient(int serializerId, LoadBalancer loadBalancer){
+        this.serviceDiscovery = new NacosServiceDiscovery(loadBalancer);
+        this.serializer = CommonSerializer.getByCode(serializerId);
+    }
+
 
     @Override
     public Object sendRequest(RpcRequest request) {

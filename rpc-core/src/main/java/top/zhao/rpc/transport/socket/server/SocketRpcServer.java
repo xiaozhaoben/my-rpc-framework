@@ -9,6 +9,7 @@ import top.zhao.rpc.provider.ServiceProviderImpl;
 import top.zhao.rpc.registry.NacosServiceRegistry;
 import top.zhao.rpc.registry.ServiceRegistry;
 import top.zhao.rpc.serializer.CommonSerializer;
+import top.zhao.rpc.transport.AbstractRpcServer;
 import top.zhao.rpc.transport.RpcServer;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ import java.util.concurrent.*;
  */
 @Slf4j
 @Data
-public class SocketRpcServer implements RpcServer {
+public class SocketRpcServer extends AbstractRpcServer {
 
     private CommonSerializer serializer;
     private final String host;
@@ -64,12 +65,12 @@ public class SocketRpcServer implements RpcServer {
     }
 
     @Override
-    public <T> void publishService(T service, Class<T> serviceClass) {
+    public <T> void publishService(T service, String serviceName) {
         if(serializer == null) {
             log.error("未设置序列化器");
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
-        serviceProvider.addServiceProvider(service, serviceClass);
-        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
+        serviceProvider.addServiceProvider(service, serviceName);
+        serviceRegistry.register(serviceName, new InetSocketAddress(host, port));
     }
 }
