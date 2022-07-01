@@ -21,9 +21,12 @@ import top.zhao.rpc.registry.ServiceRegistry;
 import top.zhao.rpc.serializer.CommonSerializer;
 import top.zhao.rpc.serializer.JsonSerializer;
 import top.zhao.rpc.serializer.KryoSerializer;
+import top.zhao.rpc.transport.AbstractRpcServer;
 import top.zhao.rpc.transport.RpcServer;
 
 import java.net.InetSocketAddress;
+
+import static top.zhao.rpc.serializer.CommonSerializer.DEFAULT_SERIALIZER;
 
 /**
  * netty服务端
@@ -32,23 +35,21 @@ import java.net.InetSocketAddress;
  */
 @Slf4j
 @Data
-public class NettyServer implements RpcServer {
-
-    private final String host;
-    private final int port;
-
-    private final ServiceRegistry serviceRegistry;
-    private final ServiceProvider serviceProvider;
+public class NettyServer extends AbstractRpcServer {
 
     private CommonSerializer serializer;
 
     public NettyServer(String host, int port) {
+        this(host, port, DEFAULT_SERIALIZER);
+    }
+    public NettyServer(String host, int port, Integer serializer) {
         this.host = host;
         this.port = port;
         serviceRegistry = new NacosServiceRegistry();
         serviceProvider = new ServiceProviderImpl();
+        this.serializer = CommonSerializer.getByCode(serializer);
+        scanServices();
     }
-
     @Override
     public void start() {
         if(serializer == null) {
@@ -87,13 +88,4 @@ public class NettyServer implements RpcServer {
         }
     }
 
-    @Override
-    public <T> void publishService(T service, Class<T> serviceClass) {
-        if(serializer == null) {
-            log.error("未设置序列化器");
-            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
-        }
-        serviceProvider.addServiceProvider(service, serviceClass);
-        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
-    }
 }

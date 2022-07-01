@@ -16,7 +16,7 @@ public class SocketTestServer {
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
         ServiceProvider serviceRegistry = new ServiceProviderImpl();
-        serviceRegistry.addServiceProvider(helloService, HelloService.class);
+        serviceRegistry.addServiceProvider(helloService, HelloService.class.getCanonicalName());
         RpcServer rpcServer = new SocketRpcServer("127.0.0.1",9000);
         rpcServer.start();
     }
